@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+
+  ### MYSQL Database ###
+  mysql:
+    container_name: mysql
+    image: mysql
+    ports:
+      - "3307:3307"
+    environment:
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: payment
+      MYSQL_DATABASE: payment
+      MYSQL_TCP_PORT: 3307
+    restart: always
+
+  ### API Spring Boot ###
+  server:
+    container_name: payment_Api
+    image: payment
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/payment?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    ports:
+      - "8081:8081"
+    restart: always
